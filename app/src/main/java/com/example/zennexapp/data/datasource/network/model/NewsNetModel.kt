@@ -1,4 +1,4 @@
-package com.example.zennexapp.data.model
+package com.example.zennexapp.data.datasource.network.model
 
 import com.google.gson.annotations.SerializedName
 

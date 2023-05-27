@@ -1,10 +1,10 @@
 package com.example.zennexapp.domain.usecase
 
-import com.example.zennexapp.domain.repository.Repository
+import com.example.zennexapp.domain.repository.AppRepository
 import javax.inject.Inject
 
-class GetNewsUseCase @Inject constructor(private val repository: Repository) {
+class GetNewsUseCase @Inject constructor(private val repository: AppRepository) {
 
-	suspend operator fun invoke(page: Int) =
-		repository.getNewsFromPage(page)
+	suspend operator fun invoke() =
+		repository.getNewsFromNetwork()
 }

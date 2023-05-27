@@ -8,6 +8,6 @@ data class ArticleEntity(
 	val publishedAt: String?,
 )
 
-data class NewsListEntity(
+data class ArticleListEntity(
 	val articlesEntity: List<ArticleEntity>
 )

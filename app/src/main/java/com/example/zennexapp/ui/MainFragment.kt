@@ -6,19 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.zennexapp.databinding.FragmentMainBinding
 import com.example.zennexapp.presentation.MainViewModel
-import com.example.zennexapp.presentation.state.NewsItemState
-import com.example.zennexapp.presentation.state.NewsState
-import com.example.zennexapp.ui.adapter.NewsAdapter
+import com.example.zennexapp.ui.pagingadapters.DefaultPagingAdapter
+import com.example.zennexapp.ui.pagingadapters.PagingAdapter
+import com.example.zennexapp.ui.pagingadapters.TryAgainAction
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
 	lateinit var binding: FragmentMainBinding
 	private val viewModel: MainViewModel by viewModels()
-	private lateinit var adapter: NewsAdapter
+	private lateinit var adapter: PagingAdapter
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		binding = FragmentMainBinding.inflate(inflater)
@@ -28,45 +31,22 @@ class MainFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		bindAdapter()
-		setListeners()
 		setObservers()
 	}
 
 	private fun bindAdapter() {
-		adapter = NewsAdapter()
-		binding.recyclerView.adapter = adapter
-	}
-
-	private fun setListeners() {
-
+		adapter = PagingAdapter()
+		val tryAgainAction: TryAgainAction = { adapter.retry() }
+		val footerAdapter = DefaultPagingAdapter(tryAgainAction)
+		val adapterWithLoadState = adapter.withLoadStateFooter(footerAdapter)
+		binding.recyclerView.adapter = adapterWithLoadState
 	}
 
 	private fun setObservers() {
-		viewModel.state.observe(viewLifecycleOwner, ::handleState)
-	}
-
-	private fun handleState(state: NewsState) {
-		when (state) {
-			is NewsState.Loading        -> renderLoadingState()
-			is NewsState.Error          -> renderError()
-			is NewsState.NewsListEntity -> renderContentListAutoState(state.newsItemStateList)
+		lifecycleScope.launch {
+			viewModel.usersFlow.collectLatest {
+				adapter.submitData(it)
+			}
 		}
 	}
-
-	private fun renderLoadingState() {
-		with(binding) {
-			progressBar.visibility = View.VISIBLE
-		}
-	}
-
-	private fun renderError() {
-	}
-
-	private fun renderContentListAutoState(state: List<NewsItemState>) {
-		adapter.newsList = state
-		with(binding) {
-			progressBar.visibility = View.GONE
-		}
-	}
-
 }
