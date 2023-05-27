@@ -1,12 +1,12 @@
-package com.example.zennexapp.data.mapper
+package com.example.zennexapp.data.datasource.network.mapper
 
-import com.example.zennexapp.data.model.ArticlesModel
-import com.example.zennexapp.data.model.NewsModel
+import com.example.zennexapp.data.datasource.network.model.ArticlesModel
+import com.example.zennexapp.data.datasource.network.model.NewsModel
 import com.example.zennexapp.domain.entity.ArticleEntity
-import com.example.zennexapp.domain.entity.NewsListEntity
+import com.example.zennexapp.domain.entity.ArticleListEntity
 
-fun NewsModel.toEntity(): NewsListEntity =
-	NewsListEntity(
+fun NewsModel.toEntity(): ArticleListEntity =
+	ArticleListEntity(
 		articlesEntity = articles.toArticlesEntity()
 	)
 

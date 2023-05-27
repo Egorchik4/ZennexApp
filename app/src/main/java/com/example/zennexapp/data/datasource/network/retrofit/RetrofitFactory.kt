@@ -1,6 +1,6 @@
-package com.example.zennexapp.data.datasource
+package com.example.zennexapp.data.datasource.network.retrofit
 
-import com.example.zennexapp.data.api.Api
+import com.example.zennexapp.data.datasource.network.api.Api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
