@@ -10,7 +10,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.zennexapp.databinding.NewsItemBinding
 import com.example.zennexapp.domain.entity.ArticleEntity
 
-class PagingAdapter : PagingDataAdapter<ArticleEntity, PagingAdapter.Holder>(UsersDiffCallback()) {
+class PagingAdapter(
+	private val onItemClickAction: (articleEntity: ArticleEntity) -> Unit
+) : PagingDataAdapter<ArticleEntity, PagingAdapter.Holder>(UsersDiffCallback()) {
 
 	class Holder(private val binding: NewsItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -31,6 +33,9 @@ class PagingAdapter : PagingDataAdapter<ArticleEntity, PagingAdapter.Holder>(Use
 	override fun onBindViewHolder(holder: Holder, position: Int) {
 		val item = getItem(position) ?: return
 		holder.bind(item)
+		holder.itemView.setOnClickListener {
+			onItemClickAction(item)
+		}
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
