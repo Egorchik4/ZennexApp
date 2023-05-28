@@ -3,6 +3,7 @@ package com.example.zennexapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.example.zennexapp.data.datasource.local.LocalDataSource
 import com.example.zennexapp.data.datasource.network.NetworkDataSource
 import com.example.zennexapp.data.datasource.network.NewsPagingSource
 import com.example.zennexapp.domain.entity.ArticleEntity
@@ -11,11 +12,12 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AppRepositoryImpl @Inject constructor(
-	private val networkDataSource: NetworkDataSource
+	private val networkDataSource: NetworkDataSource,
+	private val localDataSource: LocalDataSource
 ) : AppRepository {
 
 	override suspend fun getNewsFromNetwork(): Flow<PagingData<ArticleEntity>> {
-		return Pager(
+		val pager = Pager(
 			config = PagingConfig(
 				pageSize = PAGE_SIZE,
 				initialLoadSize = PAGE_SIZE,
@@ -23,7 +25,8 @@ class AppRepositoryImpl @Inject constructor(
 				enablePlaceholders = false
 			),
 			pagingSourceFactory = { NewsPagingSource(networkDataSource, PAGE_SIZE) }
-		).flow
+		)
+		return pager.flow
 	}
 
 	private companion object {
