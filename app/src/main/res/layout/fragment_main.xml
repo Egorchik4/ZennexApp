@@ -14,10 +14,10 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:layout_gravity="center"
+			android:layout_marginStart="@dimen/dimen_16"
 			android:gravity="center"
 			android:text="@string/main_title"
-			android:textColor="@color/black"
+			android:textColor="@color/white"
 			android:textSize="@dimen/text_size_24" />
 	</com.google.android.material.appbar.AppBarLayout>
 
