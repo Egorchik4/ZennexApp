@@ -11,14 +11,30 @@
 		android:layout_width="match_parent"
 		android:layout_height="?actionBarSize">
 
-		<TextView
-			android:layout_width="wrap_content"
+		<FrameLayout
+			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_gravity="center"
-			android:gravity="center"
-			android:text="@string/main_title"
-			android:textColor="@color/black"
-			android:textSize="@dimen/text_size_24" />
+			android:orientation="horizontal">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginStart="@dimen/dimen_16"
+				android:gravity="center"
+				android:text="@string/main_title"
+				android:textColor="@color/white"
+				android:textSize="@dimen/text_size_24" />
+
+			<ImageButton
+				android:id="@+id/cancel_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center|end"
+				android:layout_marginEnd="@dimen/dimen_16"
+				android:background="@drawable/ic_close"
+				android:visibility="gone" />
+		</FrameLayout>
+
 	</com.google.android.material.appbar.AppBarLayout>
 
 	<androidx.recyclerview.widget.RecyclerView
@@ -35,5 +51,11 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
+		android:visibility="gone" />
+
+	<WebView
+		android:id="@+id/web_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:visibility="gone" />
 </FrameLayout>

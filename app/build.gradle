@@ -18,6 +18,12 @@ android {
 		versionName "1.0"
 
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+		kapt{
+			arguments{
+				arg("room.schemaLocation","$projectDir/schemas")
+			}
+		}
 	}
 
 	buildTypes {
@@ -71,7 +77,8 @@ dependencies {
 	//Paging Library v3
 	implementation 'androidx.paging:paging-runtime-ktx:3.1.1'
 	//Room
-	implementation "androidx.room:room-runtime:2.5.1"
-	implementation "androidx.room:room-ktx:2.5.1"
-	kapt "androidx.room:room-compiler:2.5.1"
+	implementation 'androidx.room:room-runtime:2.5.1'
+	implementation 'androidx.room:room-ktx:2.5.1'
+	implementation 'androidx.room:room-paging:2.5.1'
+	kapt 'androidx.room:room-compiler:2.5.1'
 }

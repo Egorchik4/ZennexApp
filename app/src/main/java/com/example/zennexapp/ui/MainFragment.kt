@@ -4,21 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.zennexapp.databinding.FragmentMainBinding
+import com.example.zennexapp.domain.entity.ArticleEntity
 import com.example.zennexapp.presentation.MainViewModel
-import com.example.zennexapp.presentation.state.NewsItemState
-import com.example.zennexapp.presentation.state.NewsState
-import com.example.zennexapp.ui.adapter.NewsAdapter
+import com.example.zennexapp.ui.pagingadapters.DefaultPagingAdapter
+import com.example.zennexapp.ui.pagingadapters.PagingAdapter
+import com.example.zennexapp.ui.pagingadapters.TryAgainAction
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
 	lateinit var binding: FragmentMainBinding
 	private val viewModel: MainViewModel by viewModels()
-	private lateinit var adapter: NewsAdapter
+	private lateinit var adapter: PagingAdapter
+
+	companion object {
+
+		const val TEXT_MESSAGE = "Url is Empty"
+	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 		binding = FragmentMainBinding.inflate(inflater)
@@ -28,45 +39,48 @@ class MainFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		bindAdapter()
-		setListeners()
 		setObservers()
+		setListeners()
 	}
 
 	private fun bindAdapter() {
-		adapter = NewsAdapter()
-		binding.recyclerView.adapter = adapter
-	}
-
-	private fun setListeners() {
-
+		adapter = PagingAdapter(::openWebView)
+		val tryAgainAction: TryAgainAction = { adapter.retry() }
+		val footerAdapter = DefaultPagingAdapter(tryAgainAction)
+		val adapterWithLoadState = adapter.withLoadStateFooter(footerAdapter)
+		binding.recyclerView.adapter = adapterWithLoadState
 	}
 
 	private fun setObservers() {
-		viewModel.state.observe(viewLifecycleOwner, ::handleState)
-	}
-
-	private fun handleState(state: NewsState) {
-		when (state) {
-			is NewsState.Loading        -> renderLoadingState()
-			is NewsState.Error          -> renderError()
-			is NewsState.NewsListEntity -> renderContentListAutoState(state.newsItemStateList)
+		lifecycleScope.launch {
+			viewModel.usersFlow.collectLatest {
+				adapter.submitData(it)
+			}
 		}
 	}
 
-	private fun renderLoadingState() {
+	private fun setListeners() {
 		with(binding) {
-			progressBar.visibility = View.VISIBLE
+			cancelButton.setOnClickListener {
+				cancelButton.visibility = View.GONE
+				webView.visibility = View.GONE
+				webView.goBack()
+			}
 		}
 	}
 
-	private fun renderError() {
-	}
-
-	private fun renderContentListAutoState(state: List<NewsItemState>) {
-		adapter.newsList = state
+	private fun openWebView(entity: ArticleEntity) {
 		with(binding) {
-			progressBar.visibility = View.GONE
+			cancelButton.visibility = View.VISIBLE
+			webView.visibility = View.VISIBLE
+			if (entity.url.isNullOrEmpty()) {
+				Toast.makeText(requireContext(), TEXT_MESSAGE, Toast.LENGTH_SHORT).show()
+			} else {
+				webView.webViewClient = WebViewClient()
+				webView.apply {
+					loadUrl(entity.url)
+				}
+			}
 		}
 	}
-
 }
