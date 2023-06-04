@@ -1,4 +1,4 @@
-package com.example.zennexapp.ui
+package com.example.zennexapp.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,21 +9,20 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.zennexapp.databinding.FragmentMainBinding
+import com.example.zennexapp.databinding.FragmentNewsListBinding
 import com.example.zennexapp.domain.entity.ArticleEntity
-import com.example.zennexapp.presentation.MainViewModel
-import com.example.zennexapp.ui.pagingadapters.DefaultPagingAdapter
-import com.example.zennexapp.ui.pagingadapters.PagingAdapter
-import com.example.zennexapp.ui.pagingadapters.TryAgainAction
+import com.example.zennexapp.presentation.pagingadapters.DefaultPagingAdapter
+import com.example.zennexapp.presentation.pagingadapters.PagingAdapter
+import com.example.zennexapp.presentation.pagingadapters.TryAgainAction
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainFragment : Fragment() {
+class NewsListFragment : Fragment() {
 
-	lateinit var binding: FragmentMainBinding
-	private val viewModel: MainViewModel by viewModels()
+	lateinit var binding: FragmentNewsListBinding
+	private val viewModel: NewsListViewModel by viewModels()
 	private lateinit var adapter: PagingAdapter
 
 	companion object {
@@ -32,7 +31,7 @@ class MainFragment : Fragment() {
 	}
 
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-		binding = FragmentMainBinding.inflate(inflater)
+		binding = FragmentNewsListBinding.inflate(inflater)
 		return binding.root
 	}
 
@@ -77,9 +76,7 @@ class MainFragment : Fragment() {
 				Toast.makeText(requireContext(), TEXT_MESSAGE, Toast.LENGTH_SHORT).show()
 			} else {
 				webView.webViewClient = WebViewClient()
-				webView.apply {
-					loadUrl(entity.url)
-				}
+				webView.loadUrl(entity.url)
 			}
 		}
 	}

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class NewsListViewModel @Inject constructor(
 	private val repository: AppRepository
 ) : ViewModel() {
 

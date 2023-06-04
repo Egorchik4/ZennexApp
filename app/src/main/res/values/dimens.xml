@@ -5,5 +5,7 @@
 	<dimen name="dimen_100">100dp</dimen>
 	<dimen name="dimen_200">200dp</dimen>
 
+	<dimen name="text_size_12">12sp</dimen>
+	<dimen name="text_size_18">18sp</dimen>
 	<dimen name="text_size_24">24sp</dimen>
 </resources>

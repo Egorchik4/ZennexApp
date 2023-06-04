@@ -1,4 +1,4 @@
-package com.example.zennexapp.ui.pagingadapters
+package com.example.zennexapp.presentation.pagingadapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
