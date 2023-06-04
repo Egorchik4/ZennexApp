@@ -8,7 +8,4 @@ interface AppRepository {
 
 	suspend fun getNewsFromNetwork(): Flow<PagingData<ArticleEntity>>
 
-//	suspend fun getNewsFromLocal(): List<ArticleEntity>
-
-	//suspend fun saveNewsToLocalDataBase(list: List<ArticleEntity>)
 }

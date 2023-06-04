@@ -17,15 +17,15 @@ class NewsRemoteMediator @Inject constructor(
 	private val localDataSource: LocalDataSource
 ) : RemoteMediator<Int, NewsDbModel>() {
 
-	private var pageNumber = 1
+	private var pageIndex = 1
 
 	override suspend fun load(loadType: LoadType, state: PagingState<Int, NewsDbModel>): MediatorResult {
-		pageNumber = getPageIndex(loadType) ?: return MediatorResult.Success(endOfPaginationReached = true)
+		pageIndex = getPageIndex(loadType) ?: return MediatorResult.Success(endOfPaginationReached = true)
 
 		val limit = state.config.pageSize
 
 		return try {
-			val newsList = networkDataSource.getNews(page = pageNumber, pageSize = limit).toEntity().articlesEntity
+			val newsList = networkDataSource.getNews(page = pageIndex, pageSize = limit).toEntity().articlesEntity
 			if (loadType == LoadType.APPEND) {
 				localDataSource.saveData(newsList.toListNewsDbEntity())
 			}
@@ -38,11 +38,11 @@ class NewsRemoteMediator @Inject constructor(
 	}
 
 	private fun getPageIndex(loadType: LoadType): Int? {
-		pageNumber = when (loadType) {
+		pageIndex = when (loadType) {
 			LoadType.REFRESH -> 1
 			LoadType.PREPEND -> return null
-			LoadType.APPEND  -> ++pageNumber
+			LoadType.APPEND  -> ++pageIndex
 		}
-		return pageNumber
+		return pageIndex
 	}
 }

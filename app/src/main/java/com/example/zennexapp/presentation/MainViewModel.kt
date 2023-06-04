@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.zennexapp.domain.entity.ArticleEntity
-import com.example.zennexapp.domain.usecase.GetNewsUseCase
+import com.example.zennexapp.domain.repository.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -15,14 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-	private val getNewsFlowUseCase: GetNewsUseCase
+	private val repository: AppRepository
 ) : ViewModel() {
 
 	private val _state = MutableLiveData("")
 	val usersFlow: Flow<PagingData<ArticleEntity>> =
 		_state
 			.asFlow()
-			.flatMapLatest { getNewsFlowUseCase.invoke() }
+			.flatMapLatest { repository.getNewsFromNetwork() }
 			.cachedIn(viewModelScope)
 
 }

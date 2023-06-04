@@ -11,7 +11,6 @@ import com.example.zennexapp.data.datasource.network.api.Api
 import com.example.zennexapp.data.datasource.network.retrofit.RetrofitFactory
 import com.example.zennexapp.data.repository.AppRepositoryImpl
 import com.example.zennexapp.domain.repository.AppRepository
-import com.example.zennexapp.domain.usecase.GetNewsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,11 +51,5 @@ class SingletonModule {
 	@Singleton
 	fun provideLocalDataSource(localDb: LocalDatabase): LocalDataSource {
 		return LocalDataSourceImpl(localDb.getNewsDao())
-	}
-
-	@Provides
-	@Singleton
-	fun provideGetNewsFlowUseCase(repository: AppRepository): GetNewsUseCase {
-		return GetNewsUseCase(repository)
 	}
 }
