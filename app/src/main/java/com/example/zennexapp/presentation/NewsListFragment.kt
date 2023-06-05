@@ -40,6 +40,7 @@ class NewsListFragment : Fragment() {
 		bindAdapter()
 		setObservers()
 		setListeners()
+		setupRefreshLayout()
 	}
 
 	private fun bindAdapter() {
@@ -77,6 +78,15 @@ class NewsListFragment : Fragment() {
 			} else {
 				webView.webViewClient = WebViewClient()
 				webView.loadUrl(entity.url)
+			}
+		}
+	}
+
+	private fun setupRefreshLayout() {
+		with(binding) {
+			swipeRefreshLayout.setOnRefreshListener {
+				adapter.refresh()
+				swipeRefreshLayout.isRefreshing = false
 			}
 		}
 	}

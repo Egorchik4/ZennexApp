@@ -37,14 +37,6 @@
 
 	</com.google.android.material.appbar.AppBarLayout>
 
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/recyclerView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_marginTop="?actionBarSize"
-		app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-		tools:listitem="@layout/news_item" />
-
 	<ProgressBar
 		android:id="@+id/progressBar"
 		style="?android:attr/progressBarStyle"
@@ -52,6 +44,21 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
 		android:visibility="gone" />
+
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+		android:id="@+id/swipeRefreshLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="?actionBarSize">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerView"
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+			tools:listitem="@layout/news_item" />
+
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 	<WebView
 		android:id="@+id/web_view"

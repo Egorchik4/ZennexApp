@@ -33,8 +33,9 @@ class PagingAdapter(
 	override fun onBindViewHolder(holder: Holder, position: Int) {
 		val item = getItem(position) ?: return
 		holder.bind(item)
-		holder.itemView.setOnClickListener {
+		holder.itemView.setOnLongClickListener {
 			onItemClickAction(item)
+			true
 		}
 	}
 
