@@ -13,7 +13,7 @@ interface NewsDao {
 	@Query("SELECT * FROM news")
 	fun getNewsDb(): PagingSource<Int, NewsDbModel>
 
-	@Insert(onConflict = OnConflictStrategy.IGNORE)
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	suspend fun saveNewsDb(news: List<NewsDbModel>)
 
 }

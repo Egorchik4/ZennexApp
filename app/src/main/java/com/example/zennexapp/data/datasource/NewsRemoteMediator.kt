@@ -19,11 +19,15 @@ class NewsRemoteMediator @Inject constructor(
 
 	private var pageIndex = 1
 
+	companion object {
+
+		const val END_OF_NEWS = "HTTP 426"
+	}
+
 	override suspend fun load(loadType: LoadType, state: PagingState<Int, NewsDbModel>): MediatorResult {
 		pageIndex = getPageIndex(loadType) ?: return MediatorResult.Success(endOfPaginationReached = true)
 
 		val limit = state.config.pageSize
-
 		return try {
 			val newsList = networkDataSource.getNews(page = pageIndex, pageSize = limit).toEntity().articlesEntity
 			if (loadType == LoadType.APPEND) {
@@ -33,7 +37,11 @@ class NewsRemoteMediator @Inject constructor(
 				endOfPaginationReached = newsList.size < limit
 			)
 		} catch (e: Exception) {
-			MediatorResult.Error(e)
+			if (e.message?.contains(END_OF_NEWS) == true) {
+				MediatorResult.Success(endOfPaginationReached = true)
+			} else {
+				MediatorResult.Error(e)
+			}
 		}
 	}
 
